@@ -20,6 +20,14 @@ pipeline {
             }
         }
     }
+	stage('Analisis estatico') {
+            steps {
+                sh 'make cppcheck-xml'
+		recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [cppCheck(pattern: 'reports/cppcheck/*.xml')]
+            }
+        }
+    }
+
     post {
         success {
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'html/', reportFiles: 'html/', reportName: 'Documentación', reportTitles: ''])
